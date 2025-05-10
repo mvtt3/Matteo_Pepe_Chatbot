@@ -233,27 +233,7 @@
             }
         }
 
-        .linkedin-btn {
-            position: absolute;
-            bottom: 50px;
-            left: 300px;
-            background-color: #0077b5;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .linkedin-btn svg {
-            width: 16px;
-            height: 16px;
-        }
+/* Old .linkedin-btn styles removed */
 
         .skill-chart {
             margin: 15px 0;
@@ -300,6 +280,47 @@
             background-color: #e5e7eb;
         }
 
+        .contact-buttons {
+            display: flex;
+            justify-content: space-around; /* Distribuisce i pulsanti orizzontalmente */
+            align-items: center; /* Allinea verticalmente i pulsanti se hanno altezze diverse */
+            padding: 10px 15px; /* Spaziatura interna */
+            background-color: var(--light-color); /* Sfondo per separare visivamente */
+            border-top: 1px solid #ddd; /* Linea di separazione superiore */
+        }
+
+        .contact-btn {
+            color: white;
+            padding: 8px 15px; /* Aumentato padding per migliore cliccabilità */
+            border-radius: 5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Spazio tra icona e testo */
+            font-size: 0.9rem; /* Dimensione font consistente */
+            transition: opacity 0.3s ease;
+            cursor: pointer; /* Aggiunto per coerenza */
+        }
+        .contact-btn:hover {
+            opacity: 0.8;
+        }
+
+        .contact-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: white; /* Assicura che le icone SVG siano bianche */
+        }
+
+        .phone-btn {
+            background-color: #4CAF50; /* Verde telefono */
+        }
+        .email-btn {
+            background-color: #D14836; /* Rosso email */
+        }
+        .linkedin-btn-new { /* Nuova classe per evitare conflitti */
+            background-color: #0077b5; /* Blu LinkedIn */
+        }
+
         @media (max-width: 600px) {
             .container {
                 height: 100vh;
@@ -315,34 +336,43 @@
                 font-size: 0.8rem;
                 padding: 8px 12px;
             }
+
+            /* NUOVI STILI PER I PULSANTI DI CONTATTO SU MOBILE */
+            .contact-buttons {
+                flex-direction: column; /* Impila i pulsanti verticalmente */
+                align-items: stretch; /* Fa sì che i pulsanti occupino la larghezza disponibile se desiderato, o usa align-items: center; */
+                padding: 15px; /* Aggiunge padding attorno ai pulsanti */
+            }
+
+            .contact-btn {
+                width: 100%; /* Occupa la larghezza del contenitore .contact-buttons */
+                margin-bottom: 10px; /* Spazio tra i pulsanti impilati */
+                justify-content: center; /* Centra icona e testo nel pulsante */
+                font-size: 0.85rem; /* Leggermente più grande per mobile */
+                padding: 12px 15px; /* Padding maggiore per tocco più facile */
+            }
+
+            .contact-btn:last-child {
+                margin-bottom: 0; /* Rimuovi margine dall'ultimo pulsante */
+            }
+
+            .chat-body {
+                /* Aggiunge spazio in basso per non sovrapporre i pulsanti */
+                /* L'altezza dei 3 pulsanti + padding + margini */
+                padding-bottom: calc( (12px + 16px + 12px) * 3 + 10px * 2 + 30px); /* Altezza approssimativa dei pulsanti + margini + padding extra */
+            }
+
+            /* RIMOZIONE VECCHI STILI OBSOLETI PER MOBILE */
+            /* .linkedin-btn, a[href^="mailto"], div[style*="bottom: 90px"] erano gestiti con posizionamento assoluto, ora non più necessario */
+
+            .theme-toggle, .language-toggle {
+                /* Assicurati che questi non si sovrappongano o siano posizionati correttamente */
+                /* Potrebbe essere necessario aggiustare la loro posizione se i pulsanti di contatto sono fissi in basso */
+                /* Per ora, li lasciamo come sono, ma potrebbero richiedere aggiustamenti a seconda del layout finale */
+                 left: 10px; 
+                 /* Se i .contact-buttons sono fissi in basso, potresti voler spostare questi più in alto o in un'altra posizione */
+            }
         }
-    
-@media (max-width: 600px) {
-    /* Riposiziona i pulsanti per evitare sovrapposizioni su mobile */
-    .linkedin-btn {
-        bottom: 170px; /* Sposta il pulsante LinkedIn più in alto */
-    }
-    a[href^="mailto"] {
-        bottom: 130px; /* Sposta il pulsante email sopra al telefono */
-    }
-    div[style*="bottom: 90px"] {
-        bottom: 90px; /* Mantieni la posizione del pulsante telefono */
-    }
-    .theme-toggle, .language-toggle {
-        left: 10px; /* Mantieni i pulsanti del tema e lingua a sinistra */
-    }
-    /* Riduci leggermente la dimensione dei pulsanti su mobile */
-    .linkedin-btn, a[href^="mailto"], div[style*="bottom: 90px"] {
-        padding: 6px 10px;
-        font-size: 0.75rem;
-    }
-    /* Migliora la leggibilità del testo nei pulsanti */
-    div[style*="bottom: 90px"] svg, 
-    a[href^="mailto"] svg {
-        width: 14px;
-        height: 14px;
-    }
-}
 
 </style>
 </head>
@@ -369,25 +399,26 @@
             </button>
         </div>
         
-        <a href="tel:+393409853600" style="position: absolute; bottom: 50px; left: 800px; color: white; font-size: 0.8rem; display: flex; align-items: center; gap: 5px; background-color: #4CAF50; padding: 8px 12px; border-radius: 5px; cursor: pointer; text-decoration: none;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
-                <path d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/>
-            </svg>
-            +39 340 98 53 600
-        </a>      
-        <a href="mailto:matteopepe1701@gmail.com?subject=Contatto%20dal%20sito" target="_blank" style="position: absolute; bottom: 50px; left: 502px; background-color: #D14836; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 0.8rem; display: flex; align-items: center; gap: 5px; cursor: pointer; text-decoration: none;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
-                <path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/>
-            </svg>
-            matteopepe1701@gmail.com
-        </a>
-        
-        <a href="https://www.linkedin.com/in/matteo-pepe-a56477249/" target="_blank" class="linkedin-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-            </svg>
-            LinkedIn
-        </a>
+        <div class="contact-buttons">
+            <a href="tel:+393409853600" class="contact-btn phone-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/>
+                </svg>
+                +39 340 98 53 600
+            </a>
+            <a href="mailto:matteopepe1701@gmail.com?subject=Contatto%20dal%20sito" target="_blank" class="contact-btn email-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/>
+                </svg>
+                matteopepe1701@gmail.com
+            </a>
+            <a href="https://www.linkedin.com/in/matteo-pepe-a56477249/" target="_blank" class="contact-btn linkedin-btn-new">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+                LinkedIn
+            </a>
+        </div>
     </div>
 
     <script>
