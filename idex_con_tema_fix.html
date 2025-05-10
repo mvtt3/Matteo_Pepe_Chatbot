@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matteo Pepe - Chatbot CV</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --light-color: #f3f4f6;
+            --dark-color: #1f2937;
+            --success-color: #10b981;
+            --user-msg-color: #dbeafe;
+            --bot-msg-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 800px;
+            height: 90vh;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Aggiunto per contenere elementi posizionati assolutamente se necessario */
+        }
+
+        .chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 2px solid white;
+        }
+
+        .header-info h2 {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+
+        .header-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .online-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            margin-right: 5px;
+            display: inline-block;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            background-color: var(--bot-msg-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .user-message {
+            background-color: var(--user-msg-color);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+            color: var(--dark-color);
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            position: absolute;
+            bottom: -18px;
+            right: 5px;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .category-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .category-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .questions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .question-btn {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .question-btn:hover {
+            background-color: #e5e7eb;
+            border-color: var(--primary-color);
+        }
+
+        .chat-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            position: relative;
+            justify-content: flex-end;
+        }
+
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: not-allowed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px 15px;
+            background-color: var(--bot-msg-color);
+            border-radius: 15px;
+            align-self: flex-start;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            float: left;
+            margin: 0 1px;
+            background-color: #9E9EA1;
+            display: block;
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        .typing-indicator span:nth-of-type(1) {
+            animation: 1s blink infinite 0.33s;
+        }
+
+        .typing-indicator span:nth-of-type(2) {
+            animation: 1s blink infinite 0.66s;
+        }
+
+        .typing-indicator span:nth-of-type(3) {
+            animation: 1s blink infinite 0.99s;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .skill-chart {
+            margin: 15px 0;
+            display: none;
+        }
+
+        .skill-bar {
+            margin-bottom: 10px;
+        }
+
+        .skill-name {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .skill-level {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .skill-percent {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            transition: width 1s ease-in-out;
+        }
+
+        .restart-btn {
+            background-color: #f3f4f6;
+            color: var(--dark-color);
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            align-self: center;
+            display: none;
+        }
+
+        .restart-btn:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* NUOVI STILI PER I PULSANTI DI CONTATTO */
+        .contact-buttons-container {
+            padding: 10px 20px; 
+            display: flex;
+            justify-content: center; 
+            gap: 15px; 
+            flex-wrap: wrap; 
+            background-color: #fff; 
+            border-top: 1px solid #eee; 
+        }
+
+        .contact-btn {
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .contact-btn svg {
+             width: 16px;
+             height: 16px;
+             vertical-align: middle;
+        }
+
+        .phone-btn { background-color: #4CAF50; }
+        .phone-btn:hover { background-color: #45a049; }
+        .email-btn { background-color: #D14836; }
+        .email-btn:hover { background-color: #c03d2b; }
+        .linkedin-contact-btn { background-color: #0077b5; } 
+        .linkedin-contact-btn:hover { background-color: #005f8f; }
+
+
+        @media (max-width: 600px) {
+            .container {
+                height: 100vh;
+                width: 100%;
+                border-radius: 0;
+                padding-bottom: 0; 
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .category-btn {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+
+            /* Stili Mobile per i pulsanti di contatto */
+            .contact-buttons-container {
+                position: static; 
+                flex-direction: column; 
+                align-items: center; 
+                width: 100%;
+                padding: 15px 10px; 
+                gap: 10px; 
+            }
+
+            .contact-btn {
+                width: 80%; 
+                justify-content: center; 
+                font-size: 0.9rem; 
+                padding: 10px 15px; 
+            }
+        }
+    
+/* Tema scuro */
+body.dark {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+}
+
+body.dark .container {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+}
+
+body.dark .chat-header {
+    background-color: #333 !important;
+}
+
+body.dark .bot-message {
+    background-color: #3a3a3a;
+    color: #f0f0f0;
+}
+
+body.dark .user-message {
+    background-color: #4a4a4a;
+    color: #f0f0f0;
+}
+
+body.dark .question-btn {
+    background-color: #444;
+    color: #fff;
+    border-color: #666;
+}
+
+body.dark .question-btn:hover {
+    background-color: #555;
+}
+
+body.dark .category-btn {
+    background-color: #555;
+    color: #fff;
+}
+
+body.dark .category-btn:hover {
+    background-color: #777;
+}
+
+body.dark .restart-btn {
+    background-color: #444;
+    color: #fff;
+}
+
+body.dark .restart-btn:hover {
+    background-color: #555;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-header">
+            <img src="https://i.imgur.com/zXBYDy0.jpeg" alt="Matteo Pepe" class="profile-pic" id="profile-pic">
+            <div class="header-info">
+                <h2>Matteo Pepe</h2>
+                <p><span class="online-indicator"></span>Online</p>
+            </div>
+<div style="margin-left:auto;">
+    <button id="themeToggle" style="background-color:transparent;border:none;color:white;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;gap:5px;">
+        <span>TEMA</span>
+        <span id="themeIcon">🌞</span>
+    </button>
+</div>
+
+        </div>
+        
+        <div class="chat-body" id="chat-body">
+            <!-- Messages will be added here -->
+        </div>
+        
+        <div class="chat-footer">
+            <button class="send-btn" disabled>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="contact-buttons-container">
+            <a href="tel:+393409853600" class="contact-btn phone-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
+                    <path d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/>
+                </svg>
+                +39 340 98 53 600
+            </a>
+            
+            <a href="mailto:matteopepe1701@gmail.com?subject=Contatto%20dal%20sito" target="_blank" class="contact-btn email-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
+                    <path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/>
+                </svg>
+                matteopepe1701@gmail.com
+            </a>
+            
+            <a href="https://www.linkedin.com/in/matteo-pepe-a56477249/" target="_blank" class="contact-btn linkedin-contact-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+                LinkedIn
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Data for the chatbot
+        const data = {
+            welcomeMessage: "Ciao! Sono Matteo Pepe. Questo è il mio chatbot personale che ti permetterà di conoscermi meglio. Seleziona una categoria per iniziare.",
+            categories: [
+                {
+                    id: "career",
+                    name: "Carriera professionale",
+                    questions: [
+                        { id: "current-role", text: "Quale ruolo ricopri attualmente?" },
+                        { id: "current-work", text: "Stai attualmente lavorando? Se sì, dove?" },
+                        { id: "experiences", text: "Quale esperienze hai maturato nelle aziende in cui hai lavorato?" },
+                        { id: "jakala-role", text: "Quale ruolo e quali mansioni svolgevi presso Jakala?" },
+                        { id: "intesa-role", text: "Quale ruolo e quali mansioni svolgevi presso Intesa SanPaolo Innovation Center?" },
+                        { id: "future", text: "Come ti vedi da qui a 5 anni?" }
+                    ]
+                },
+                {
+                    id: "skills",
+                    name: "Le mie competenze",
+                    questions: [
+                        { id: "programming", text: "Quali linguaggi di programmazione conosci?" },
+                        { id: "best-skills", text: "Potresti descrivere le competenze sulle quali ti senti più forte?" },
+                        { id: "sap-bc", text: "Hai mai assunto il ruolo di Consulente SAP/BC?" },
+                        { id: "languages", text: "Qual è il tuo livello di Inglese? Conosci altre lingue?" }
+                    ]
+                },
+                {
+                    id: "looking-for",
+                    name: "Cosa sto cercando?",
+                    questions: [
+                        { id: "ict-interest", text: "Cosa ti interessa del mondo ICT e nello specifico del mondo ERP?" },
+                        { id: "role-sector", text: "Quale ruolo stai cercando? In quale settore? Perché?" },
+                        { id: "developer-role", text: "Vorresti assumere una figura da sviluppatore o preferisci altri ambiti?" },
+                        { id: "job-search", text: "Sei attualmente alla ricerca di un'opportunità lavorativa?" }
+                    ]
+                },
+                {
+                    id: "studies",
+                    name: "I miei studi / Hobby",
+                    questions: [
+                        { id: "diploma", text: "Quale diploma di 5° superiore hai conseguito?" },
+                        { id: "current-studies", text: "Stai attualmente studiando?" },
+                        { id: "hobbies", text: "Quali sono i tuoi hobby, come passi il tempo?" },
+                        { id: "university", text: "Dove abiti? Sei disposto a trasferte? Sei automunito?" }
+                    ]
+                }
+            ],
+            answers: {
+                "current-role": "Attualmente sono uno Stagista Curriculare presso Intesa San Paolo Innovation Center come parte del mio percorso formativo con ITS-ICT Piemonte, dove sto elaborando una tesi in vista del mio diploma di ERP System Developer previsto per Luglio 2025.",
+                "current-work": "Sì, attualmente lavoro come Stagista Curriculare presso Intesa San Paolo Innovation Center dal febbraio 2025. Mi occupo principalmente dello studio e dell'integrazione lato business dei database interni con la tecnologia di power platform (Power Apps). Mi sto occupando di creare delle dashboard per la visualizzazione dei dati delle Startup registrate nel db con Power BI e grafici nativi di Power Apps. Ho sviluppato poi delle macro Excel in VBA per la pulizia dei dati in Excel prima della migrazione di quest'ultimi nel database aziendale. Attualmente sto svolgendo gli UAT , test di verifica del funzionamento del database aziendale.",
+                "experiences": "Ho maturato esperienza nella logistica presso Jakala S.P.A. per circa un anno e mezzo tra il 2021 e il 2023, dove mi sono occupato della gestione delle spedizioni , della gestione delle email e del problem solving relativo alle problematiche che potevano sorgere durante il trasporto o la consegna della merce. Ho lavorato a stretto contatto con i trasportatori e con i clienti finali, garantendo un servizio efficiente e puntuale. Ho inoltre utilizzato software gestionali per il tracciamento delle spedizioni e la gestione del magazzino.",
+                "jakala-role": "Presso Jakala S.P.A. ricoprivo il ruolo di Addetto alla Logistica. Le mie mansioni principali includevano la gestione delle spedizioni nazionali e internazionali, il contatto con i fornitori e i trasportatori, la preparazione dei documenti di trasporto, il monitoraggio delle consegne e la risoluzione di eventuali problematiche. Mi occupavo anche della gestione del magazzino e dell'inventario.",
+                "intesa-role": "Presso Intesa SanPaolo Innovation Center, come Stagista Curriculare, mi sto focalizzando sull'integrazione business dei database interni con la Power Platform di Microsoft. Questo include la creazione di dashboard in Power BI e grafici in Power Apps per visualizzare i dati delle startup. Ho anche sviluppato macro VBA in Excel per la pulizia dei dati prima della migrazione e sto attualmente conducendo test UAT sul database aziendale.",
+                "future": "Nei prossimi 5 anni mi vedo come un professionista affermato nel campo dell'ICT, possibilmente con un ruolo di responsabilità in ambito ERP o Business Intelligence. Vorrei continuare a imparare e crescere professionalmente, contribuendo attivamente al successo dell'azienda per cui lavorerò e magari guidando un team.",
+                "programming": "Conosco diversi linguaggi di programmazione, tra cui Python, SQL, VBA per Excel. Sto approfondendo anche JavaScript e le tecnologie web. Ho anche basi di C# e Java grazie al mio percorso di studi.",
+                "best-skills": "Mi sento particolarmente forte nell'analisi dei dati, nel problem solving e nella gestione di progetti. Ho una buona capacità di apprendimento e mi adatto facilmente a nuove tecnologie e contesti lavorativi. Sono preciso, organizzato e orientato al risultato. Ho anche buone doti comunicative e di lavoro in team.",
+                "sap-bc": "Durante il mio percorso formativo presso ITS-ICT Piemonte, sto acquisendo competenze specifiche come ERP System Developer, che includono una formazione approfondita su SAP, compresi aspetti di Business Consulting (BC). Non ho ancora ricoperto un ruolo specifico come Consulente SAP/BC in un contesto lavorativo, ma è un'area di grande interesse per il mio futuro professionale.",
+                "languages": "Il mio livello di inglese è B2 (Intermedio-Avanzato), sia scritto che parlato. Comprendo e parlo anche un po' di spagnolo a livello base.",
+                "ict-interest": "Del mondo ICT mi affascina la sua capacità di trasformare e ottimizzare i processi aziendali. Nello specifico, il mondo ERP mi interessa per la sua centralità nella gestione integrata delle risorse aziendali e per le sfide continue che offre in termini di personalizzazione e innovazione tecnologica. Credo che una buona implementazione ERP sia cruciale per la competitività di un'azienda.",
+                "role-sector": "Sto cercando un ruolo come Junior ERP Consultant, Business Analyst o Data Analyst, preferibilmente in aziende di consulenza ICT o in aziende finali strutturate che investono in innovazione. Il settore manifatturiero, retail o dei servizi mi attirano particolarmente. Cerco un ambiente dinamico dove poter applicare le mie competenze e continuare a crescere.",
+                "developer-role": "Sebbene abbia competenze di sviluppo e mi piaccia programmare, sono più orientato verso ruoli che combinano aspetti tecnici con quelli funzionali e di business, come l'analisi dei requisiti, la consulenza e la gestione di progetti. Non escludo ruoli da sviluppatore, ma la mia preferenza va verso figure più ibride.",
+                "job-search": "Sì, essendo il mio stage curriculare e il mio percorso di studi in fase di conclusione (diploma previsto per Luglio 2025), sono attivamente alla ricerca di un'opportunità lavorativa stimolante che possa iniziare da settembre 2025.",
+                "diploma": "Ho conseguito il diploma di Perito Informatico presso l'ITIS G. Omar di Novara.",
+                "current-studies": "Sì, sto completando il mio percorso di studi post-diploma come ERP System Developer presso la Fondazione ITS-ICT Piemonte. Il diploma è previsto per Luglio 2025.",
+                "hobbies": "Nel tempo libero mi piace molto giocare a calcio, viaggiare per scoprire nuove culture, leggere libri (soprattutto thriller e saggi tecnologici) e tenermi aggiornato sulle ultime novità del mondo tech. Mi diletto anche con piccoli progetti di programmazione personale.",
+                "university": "Attualmente abito a Novara. Sono assolutamente disposto a trasferte per lavoro e sono automunito."
+            },
+            skillLevels: { // Per la visualizzazione del grafico competenze
+                "Python": 80,
+                "SQL": 75,
+                "VBA": 70,
+                "Power BI": 85,
+                "Power Apps": 70,
+                "Analisi Dati": 80,
+                "Problem Solving": 90
+            }
+        };
+
+        const chatBody = document.getElementById('chat-body');
+        const profilePic = document.getElementById('profile-pic');
+        let currentCategory = null;
+        let conversationHistory = [];
+
+        // Funzione per aggiungere un messaggio alla chat
+        function addMessage(text, sender, time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
+            
+            const messageContent = document.createElement('p');
+            messageContent.innerHTML = text; // Usa innerHTML per consentire tag come <br>
+            messageDiv.appendChild(messageContent);
+
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight; 
+            conversationHistory.push({ sender, text });
+        }
+        
+        function showTypingIndicator() {
+            let typingDiv = document.querySelector('.typing-indicator');
+            if (!typingDiv) {
+                typingDiv = document.createElement('div');
+                typingDiv.classList.add('typing-indicator');
+                typingDiv.innerHTML = '<span></span><span></span><span></span>';
+                chatBody.appendChild(typingDiv);
+            }
+            typingDiv.style.display = 'flex'; 
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingDiv = document.querySelector('.typing-indicator');
+            if (typingDiv) {
+                typingDiv.style.display = 'none';
+            }
+        }
+        
+        function showCategories() {
+            clearChatArea(); 
+            const categoriesDiv = document.createElement('div');
+            categoriesDiv.classList.add('categories');
+            data.categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.classList.add('category-btn');
+                btn.textContent = category.name;
+                btn.onclick = () => selectCategory(category.id);
+                categoriesDiv.appendChild(btn);
+            });
+            chatBody.appendChild(categoriesDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+            currentCategory = null; 
+            hideRestartButton();
+        }
+
+        function clearChatArea() {
+            const categoriesDiv = chatBody.querySelector('.categories');
+            const questionsDiv = chatBody.querySelector('.questions');
+            const skillChartDiv = chatBody.querySelector('.skill-chart');
+            if (categoriesDiv) categoriesDiv.remove();
+            if (questionsDiv) questionsDiv.remove();
+            if (skillChartDiv) skillChartDiv.remove();
+        }
+        
+        function selectCategory(categoryId) {
+            currentCategory = data.categories.find(cat => cat.id === categoryId);
+            addMessage(`Hai selezionato: <strong>${currentCategory.name}</strong>`, 'user');
+            
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addMessage(`Ottima scelta! Ecco alcune domande che potresti farmi riguardo a "${currentCategory.name}":`, 'bot');
+                showQuestions();
+                showRestartButton();
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function showQuestions() {
+            clearChatArea();
+            const questionsDiv = document.createElement('div');
+            questionsDiv.classList.add('questions');
+            currentCategory.questions.forEach(question => {
+                const btn = document.createElement('button');
+                btn.classList.add('question-btn');
+                btn.textContent = question.text;
+                btn.onclick = () => askQuestion(question.id, question.text);
+                questionsDiv.appendChild(btn);
+            });
+            chatBody.appendChild(questionsDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function askQuestion(questionId, questionText) {
+            addMessage(questionText, 'user'); 
+            
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                let answer = data.answers[questionId];
+                if (answer) {
+                    addMessage(answer, 'bot');
+                } else if (questionId === 'show-skills-chart') {
+                    addMessage("Certo, ecco una visualizzazione delle mie principali competenze:", 'bot');
+                    showSkillChart();
+                } else {
+                    addMessage("Mi dispiace, non ho ancora una risposta per questa domanda.", 'bot');
+                }
+                addMessage(`Vuoi farmi altre domande su "${currentCategory.name}" o tornare alle categorie principali?`, 'bot');
+                showQuestions(); 
+                showRestartButton(); 
+            }, 1000 + Math.random() * 1500);
+        }
+
+        function showSkillChart() {
+            clearChatArea(); 
+            const skillChartDiv = document.createElement('div');
+            skillChartDiv.classList.add('skill-chart');
+
+            const title = document.createElement('h3');
+            title.textContent = "Grafico Competenze";
+            title.style.marginBottom = "15px";
+            title.style.textAlign = "center";
+            skillChartDiv.appendChild(title);
+
+            for (const skill in data.skillLevels) {
+                const skillBarContainer = document.createElement('div');
+                skillBarContainer.classList.add('skill-bar');
+
+                const skillName = document.createElement('div');
+                skillName.classList.add('skill-name');
+                skillName.textContent = skill;
+                skillBarContainer.appendChild(skillName);
+
+                const skillLevelOuter = document.createElement('div');
+                skillLevelOuter.classList.add('skill-level');
+
+                const skillPercentInner = document.createElement('div');
+                skillPercentInner.classList.add('skill-percent');
+                skillPercentInner.style.width = '0%'; 
+                skillPercentInner.textContent = data.skillLevels[skill] + '%'; 
+                skillPercentInner.style.textAlign = 'right';
+                skillPercentInner.style.paddingRight = '5px';
+                skillPercentInner.style.color = 'white';
+
+
+                skillLevelOuter.appendChild(skillPercentInner);
+                skillBarContainer.appendChild(skillLevelOuter);
+                skillChartDiv.appendChild(skillBarContainer);
+                
+                setTimeout(() => {
+                    skillPercentInner.style.width = data.skillLevels[skill] + '%';
+                }, 100); 
+            }
+            
+            chatBody.appendChild(skillChartDiv);
+            skillChartDiv.style.display = 'block'; 
+            chatBody.scrollTop = chatBody.scrollHeight;
+            showRestartButton();
+        }
+        
+        let restartButtonInstance = null;
+        function showRestartButton() {
+            if (!restartButtonInstance) {
+                restartButtonInstance = document.createElement('button');
+                restartButtonInstance.classList.add('restart-btn');
+                restartButtonInstance.textContent = 'Torna alle Categorie';
+                restartButtonInstance.onclick = () => {
+                    addMessage("Torno alle categorie principali.", 'user');
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage(data.welcomeMessage, 'bot');
+                        showCategories();
+                    }, 500);
+                };
+                 chatBody.appendChild(restartButtonInstance);
+            }
+            restartButtonInstance.style.display = 'block';
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function hideRestartButton() {
+            if (restartButtonInstance) {
+                restartButtonInstance.style.display = 'none';
+            }
+        }
+
+        function initChatbot() {
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addMessage(data.welcomeMessage, 'bot');
+                showCategories();
+            }, 1500);
+        }
+
+        const skillsCategory = data.categories.find(cat => cat.id === 'skills');
+        if (skillsCategory) {
+            skillsCategory.questions.push({ id: 'show-skills-chart', text: 'Mostrami un grafico delle tue competenze' });
+        }
+
+        initChatbot();
+    </script>
+
+<script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const icon = document.getElementById("themeIcon");
+
+    toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        icon.textContent = document.body.classList.contains("dark") ? "🌙" : "🌞";
+    });
+</script>
+</body>
+</html>
+
