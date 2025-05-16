@@ -18,8 +18,6 @@ Questo chatbot è parte del mio portfolio personale ed è stato progettato per *
 ✅ Navigazione per categorie tematiche (carriera, studi, competenze, ecc.)  
 ✅ Simulazione realistica di messaggi utente/bot con animazioni  
 ✅ Visualizzazione dinamica delle competenze tramite grafico  
-✅ Modalità **dark theme**  
-✅ Supporto multilingua (🇮🇹 IT / 🇬🇧 EN)  
 ✅ Pulsanti di contatto integrati: telefono, email, LinkedIn  
 
 ---
@@ -60,9 +58,6 @@ Alla selezione di una domanda, viene generata una risposta + (eventuale grafico 
 L’utente può tornare al menu categorie in qualsiasi momento.
 
 🧪 Come usarlo
-🔗 Anteprima
-Puoi vedere il chatbot live sul mio portfolio (oppure hosta la demo su GitHub Pages).
-
 ▶️ Passaggi per l’uso
 Clona o scarica questo repository:
 
@@ -77,7 +72,7 @@ Inizia a esplorare cliccando sulle categorie.
 💡 Tutto funziona localmente, non è necessario alcun server!
 
 📷 Screenshot
-Aggiungi qui immagini del chatbot in azione:
+
 
 bash
 Copia
