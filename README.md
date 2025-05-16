@@ -93,13 +93,14 @@ Modifica
 
 ![Chatbot Screenshot](https://i.imgur.com/47q7655.png)
 
+### Screenshot della chat
+
+![Chatbot Screenshot](https://i.imgur.com/0X7D1rT.png)
+
+
 ---
 
-## 🎥 Video Demo
 
-_Aggiungi qui un video che mostra il funzionamento del bot:_
-
-Esempio:
 
 
 yaml
