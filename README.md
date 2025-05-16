@@ -1,10 +1,12 @@
 # 🧠 Matteo Pepe - Chatbot CV
 
-[![HTML](https://img.shields.io/badge/code-HTML-blue)](https://developer.mozilla.org/en-US/docs/Web/HTML)  
-[![CSS](https://img.shields.io/badge/style-CSS-blueviolet)](https://developer.mozilla.org/en-US/docs/Web/CSS)  
-[![JavaScript](https://img.shields.io/badge/script-JavaScript-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)  
-[![Responsive](https://img.shields.io/badge/UI-Responsive-informational)]()  
-[![Version](https://img.shields.io/badge/version-1.0-green)]()
+<p>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://img.shields.io/badge/code-HTML-blue" alt="HTML"></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/style-CSS-blueviolet" alt="CSS"></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://img.shields.io/badge/script-JavaScript-yellow" alt="JavaScript"></a>
+  <a href="#"><img src="https://img.shields.io/badge/UI-Responsive-informational" alt="Responsive"></a>
+  <a href="#"><img src="https://img.shields.io/badge/version-1.0-green" alt="Version"></a>
+</p>
 
 ---
 
