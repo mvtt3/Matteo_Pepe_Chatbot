@@ -77,10 +77,11 @@ Inizia a esplorare cliccando sulle categorie.
 bash
 Copia
 Modifica
-📌 Suggerimento: Inserisci gli screenshot come file PNG o JPG nella cartella /assets e includili così:
-![Chat Screenshot](assets/chat-screenshot1.png)
-🎥 Video Demo
-Aggiungi qui un video che mostra il funzionamento del bot:
+## 📷 Screenshot
+
+### Interfaccia principale del chatbot
+
+![Chatbot Screenshot](https://i.imgur.com/gCUM7DP.png)
 
 bash
 Copia
