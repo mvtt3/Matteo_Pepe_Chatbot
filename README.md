@@ -91,7 +91,7 @@ Modifica
 
 ### Interfaccia principale del chatbot
 
-![Chatbot Screenshot](https://i.imgur.com/gCUM7DP.png)
+![Chatbot Screenshot](https://i.imgur.com/47q7655.png)
 
 ---
 
